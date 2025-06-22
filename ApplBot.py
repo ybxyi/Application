@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # === Google Sheets setup ===
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("D:/ApplBot/telegrambotapplications-2e9e38c381bc.json", SCOPE)
+CREDS = ServiceAccountCredentials.from_json_keyfile_name("/home/ec2-user/Application/telegrambotapplications-2e9e38c381bc.json", SCOPE)
 GSHEET = gspread.authorize(CREDS)
 SPREADSHEET = GSHEET.open("Driver applications")
 
