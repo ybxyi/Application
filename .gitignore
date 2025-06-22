@@ -1,0 +1,12 @@
+# Google API ключ
+telegrambotapplications-2e9e38c381bc.json
+
+# Кэш и служебные файлы Python
+__pycache__/
+*.pyc
+
+# Переменные среды
+.env
+
+# Логи
+*.log
