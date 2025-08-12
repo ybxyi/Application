@@ -7,13 +7,15 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # === Google Sheets setup ===
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("/home/ec2-user/Application/telegrambotapplications-2e9e38c381bc.json", SCOPE)
+CREDS = ServiceAccountCredentials.from_json_keyfile_name("utility-lock-461914-u7-3d1441091f6e.json", SCOPE)
 GSHEET = gspread.authorize(CREDS)
-SPREADSHEET = GSHEET.open("Driver applications")
+SPREADSHEET = GSHEET.open("Driver Application")
 
 # === Chat ID → Worksheet mapping ===
 CHAT_WORKSHEET_MAP = {
-    -1002664379092: "Asia",
+    -4204589753: "Dilia",
+    -4781238730: "Asia",
+    -4553990882: "Ruslan"
 }
 
 # === Логирование ===
@@ -21,14 +23,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # === Обработка сообщений ===
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    app.add_handler(MessageHandler(filters.UpdateType.EDITED_MESSAGE & filters.TEXT, handle_message))
+async def handle_driver_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    app.add_handler(MessageHandler(filters.UpdateType.EDITED_MESSAGE & filters.TEXT, handle_driver_message))
     message = update.edited_message or update.message
     if not message:
         return
     logger.info(f"Received message from chat_id: {message.chat_id}")
     chat_id = message.chat_id
-    text = message.text.strip()
+    text = message.text or message.caption
     lines = text.splitlines()
     if not text.lower().startswith("#driver"):
         return  # не водители — не добавляем
@@ -50,12 +52,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         now = datetime.now().strftime("%m/%d/%Y")
 
         worksheet = SPREADSHEET.worksheet(worksheet_name)
-        worksheet.append_row([name, company, phone, now])
+        worksheet.append_row([name, company, phone, now, "NEW"])
         
 
 # === Запуск бота ===
-app = ApplicationBuilder().token("7640182483:AAHuTCYyUUP_XQ3s4nXEGBHWVYwLQAVzZOk").build()
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+app = ApplicationBuilder().token("7640182483:AAFnofwIYnMHxSsZMdllYz3fKD9k5VXTlJY").build()
+app.add_handler(MessageHandler(filters.UpdateType.EDITED_MESSAGE, handle_driver_message))
+app.add_handler(MessageHandler(filters.TEXT | filters.PHOTO, handle_driver_message))
+
+
 
 print("Бот запущен...")
 app.run_polling()
