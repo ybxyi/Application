@@ -15,7 +15,8 @@ SPREADSHEET = GSHEET.open("Driver Application")
 CHAT_WORKSHEET_MAP = {
     -4204589753: "Dilia",
     -4781238730: "Asia",
-    -4553990882: "Ruslan"
+    -4553990882: "Ruslan",
+    -5276241079: "Adil"
 }
 
 # === Логирование ===
@@ -64,3 +65,4 @@ app.add_handler(MessageHandler(filters.TEXT | filters.PHOTO, handle_driver_messa
 
 print("Бот запущен...")
 app.run_polling()
+
